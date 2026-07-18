@@ -8,5 +8,8 @@
     "build": "echo \"no packages to build yet\"",
     "test": "echo \"no packages to test yet\"",
     "typecheck": "echo \"no packages to typecheck yet\""
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
   }
 }

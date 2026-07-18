@@ -1,5 +1,34 @@
 {
   "name": "@flowfig/figma-plugin",
   "version": "0.0.0",
-  "private": true
+  "private": true,
+  "scripts": {
+    "build": "build-figma-plugin --typecheck --minify",
+    "watch": "build-figma-plugin --typecheck --watch",
+    "typecheck": "tsc --noEmit"
+  },
+  "figma-plugin": {
+    "editorType": ["figma"],
+    "name": "Flowfig",
+    "networkAccess": {
+      "allowedDomains": ["none"]
+    },
+    "permissions": ["teamlibrary"],
+    "menu": [
+      { "name": "Import…", "main": "src/main/import.main.ts", "ui": "src/ui/import.ui.tsx" },
+      { "name": "Scrape symbol table", "main": "src/main/scrape.main.ts", "ui": "src/ui/scrape.ui.tsx" },
+      { "name": "Settings", "main": "src/main/settings.main.ts", "ui": "src/ui/settings.ui.tsx" }
+    ]
+  },
+  "dependencies": {
+    "@create-figma-plugin/ui": "^4.0.3",
+    "@create-figma-plugin/utilities": "^4.0.3",
+    "@flowfig/core": "*",
+    "preact": "^10.29.7"
+  },
+  "devDependencies": {
+    "@create-figma-plugin/build": "^4.0.3",
+    "@create-figma-plugin/tsconfig": "^4.0.3",
+    "@figma/plugin-typings": "^1.131.0"
+  }
 }
