@@ -1,0 +1,32 @@
+{
+    "api": "1.0.0",
+    "editorType": [
+        "figma"
+    ],
+    "id": "flowfig",
+    "name": "Flowfig",
+    "main": "build/main.js",
+    "ui": "build/ui.js",
+    "menu": [
+        {
+            "name": "Import…",
+            "command": "src/main/import.main.ts--default"
+        },
+        {
+            "name": "Scrape symbol table",
+            "command": "src/main/scrape.main.ts--default"
+        },
+        {
+            "name": "Settings",
+            "command": "src/main/settings.main.ts--default"
+        }
+    ],
+    "networkAccess": {
+        "allowedDomains": [
+            "none"
+        ]
+    },
+    "permissions": [
+        "teamlibrary"
+    ]
+}
