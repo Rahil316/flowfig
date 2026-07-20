@@ -1,5 +1,21 @@
 {
   "name": "@flowfig/core",
   "version": "0.0.0",
-  "private": true
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./format": "./src/format/index.ts",
+    "./resolver": "./src/resolver/index.ts",
+    "./translator": "./src/translator/index.ts",
+    "./matching": "./src/matching/index.ts"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "vitest": "^3.2.7"
+  }
 }

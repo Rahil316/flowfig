@@ -10,7 +10,7 @@ Check `Documentation/MISSION.md` before adding scope to any phase below — if i
 
 | Phase | Package | Focus | Status | Docs |
 |---|---|---|---|---|
-| P0 | `core` | Resolver + Translator as pure, fixture-tested TS | 🟡 Planned — repo scaffolded, architecture written, **no source code yet** | [ARCHITECTURE.md](../packages/core/ARCHITECTURE.md) |
+| P0 | `core` | Resolver + Translator as pure, fixture-tested TS | 🟠 In progress — types + format validation landed (tasks 1-3), resolver/translator/matching logic not yet written | [ARCHITECTURE.md](../packages/core/ARCHITECTURE.md) |
 | P1 | `figma-plugin` | Node Writer + scraper | 🟡 Planned — architecture written, blocked on P0 | [ARCHITECTURE.md](../packages/figma-plugin/ARCHITECTURE.md) |
 | P2 | `agent-kit` | The flagship CLI, npm-published | 🟡 Planned — architecture written, blocked on P0 + P1 | [ARCHITECTURE.md](../packages/agent-kit/ARCHITECTURE.md) |
 | P3 | `extension` | Chrome MV3 capture (scope widened — see Decision #3) | 🟡 Planned — architecture written, blocked on P0 + P1 | [ARCHITECTURE.md](../packages/extension/ARCHITECTURE.md) |
@@ -19,7 +19,7 @@ Check `Documentation/MISSION.md` before adding scope to any phase below — if i
 
 Status legend: ⬜ Not started · 🟡 Planned (architecture exists, no code) · 🟠 In progress · 🟢 Shipped · 🔴 Blocked
 
-Nothing has shipped yet. All four P0–P3 packages currently exist only as `package.json` stubs plus an `ARCHITECTURE.md`.
+Nothing has shipped yet. `core` has real types + format validation (see below); `figma-plugin` has a real build scaffold; `agent-kit` and `extension` still exist only as `package.json` stubs plus an `ARCHITECTURE.md`.
 
 ---
 
@@ -35,8 +35,8 @@ The four package architecture docs were researched and written **in parallel**, 
 
 **Owner of resolution**: whoever implements `core`'s `format/types.ts` (P0 task 2, per `core/ARCHITECTURE.md`) should treat this section as required reading before finalizing those types, and should update this section to ✅ once `figma-plugin`, `extension`, and `agent-kit`'s docs are amended to import the real shape instead of their interim vendored copies.
 
-- [ ] `core` ships its real `RawDomSnapshot`/`SymbolTable` types (P0 task 2 in `core/ARCHITECTURE.md`)
-- [ ] `figma-plugin`'s shared types reconciled against `core`'s real shape (its own task 2)
+- [x] `core` ships its real `RawDomSnapshot`/`SymbolTable` types (P0 tasks 2 + 4 in `core/ARCHITECTURE.md`) — landed in `packages/core/src/resolver/types.ts` and `packages/core/src/translator/types.ts`. Resolution taken: `RawDomSnapshotNode` kept core's typed `NormalizedComputedStyle` (vs. the other two docs' untyped `Record<string,string>`) since that's what keeps the resolver producer-independent, but gained `shadow`/`frame` opaqueness annotations from `extension`'s draft (core's original sketch had no way to represent a closed-shadow-root/cross-origin-iframe subtree at all — a real gap, not just a naming difference). `SymbolTable` took `figma-plugin`'s stronger fields as designed (`variantOf`, `modes`/`scopes`/`collection`) per the note below.
+- [ ] `figma-plugin`'s shared types reconciled against `core`'s real shape (its own task 2) — not started; `core`'s types are ready to import once P1 resumes.
 - [ ] `extension`'s vendored `snapshot-types.ts` replaced with a real import + conformance test (its own task 9)
 - [ ] `agent-kit`'s RFC (its own task 1) lands and its driver is updated to match, including the `declaredDeclarations`-equivalent gap above
 
@@ -45,11 +45,11 @@ The four package architecture docs were researched and written **in parallel**, 
 ## Requirements checklists (condensed — full detail in each package's ARCHITECTURE.md)
 
 ### P0 — `core`
-- [ ] `format`: formatVersion-tagged types for all 3 file kinds + hard-reject validators
-- [ ] `resolver`: raw snapshot → resolved tree, including auto-layout/sizing inference
-- [ ] `translator`: resolved tree + tags + symbol table → componentRef/token-annotated tree
-- [ ] `matching`: value-only and structural fuzzy matching, both pure over abstract signatures
-- [ ] Zero `figma`/`chrome`/Node-builtin imports, enforced by lint rule, not convention
+- [x] `format`: formatVersion-tagged types for all 3 file kinds + hard-reject validators
+- [ ] `resolver`: raw snapshot → resolved tree, including auto-layout/sizing inference — types landed, `resolve()`/`layout.ts`/`sizing.ts`/`text.ts`/`color.ts` not yet written
+- [ ] `translator`: resolved tree + tags + symbol table → componentRef/token-annotated tree — types landed, `translate()`/`tags.ts`/`tokens.ts` not yet written
+- [ ] `matching`: value-only and structural fuzzy matching, both pure over abstract signatures — types landed, `color.ts`/`spacing.ts`/`structural.ts` not yet written
+- [x] Zero `figma`/`chrome`/Node-builtin imports, enforced by lint rule, not convention — `eslint.config.js`'s `packages/core/src/**` block
 - [ ] `examples/` fixture set + golden-file tests for resolver and translator
 
 ### P1 — `figma-plugin`
